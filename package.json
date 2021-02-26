@@ -4,6 +4,9 @@
   "main": "index.js",
   "author": "davidalves1 <alves.david@outlook.com> (https://davidalves1.com)",
   "license": "Apache-2.0",
+  "scripts": {
+    "test": "jest --no-cache"
+  },
   "devDependencies": {
     "@types/jest": "^26.0.20",
     "@types/node": "^14.14.31",
