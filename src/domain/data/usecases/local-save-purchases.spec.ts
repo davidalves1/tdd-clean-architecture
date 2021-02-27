@@ -1,5 +1,3 @@
-import { Stream } from 'stream';
-
 class LocalSavePurchases {
   constructor(private readonly cacheStore: CacheStore) {}
 
@@ -42,15 +40,10 @@ describe('LocalSavePurchases', () => {
     expect(cacheStore.deleteCallsCount).toBe(0);
   });
 
-  it('should delete cache on init', async () => {
+  it('should delete old cache on sut.save', async () => {
     const { sut, cacheStore } = makeSut();
     await sut.save();
     expect(cacheStore.deleteCallsCount).toBe(1);
-  });
-
-  it('should delete cache on init', async () => {
-    const { sut, cacheStore } = makeSut();
-    await sut.save();
     expect(cacheStore.key).toBe('purchases');
   });
 });
