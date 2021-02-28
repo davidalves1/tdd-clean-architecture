@@ -9,13 +9,11 @@ export class CacheStoreSpy implements CacheStore {
 
   delete(key: string): void {
     this.messages.push(CacheStoreSpy.Message.delete);
-    this.deleteCallsCount += 1;
     this.deleteKey = key;
   }
 
   insert(key: string, value: any): void {
     this.messages.push(CacheStoreSpy.Message.insert);
-    this.insertCallsCount += 1;
     this.insertKey = key;
     this.insertValues = value;
   }
