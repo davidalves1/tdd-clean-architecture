@@ -4,6 +4,7 @@
     "paths": {
       "@/*": ["*"]
     },
-    "rootDir": "src"
+    "rootDir": "src",
+    "esModuleInterop": true
   }
 }
