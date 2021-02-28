@@ -4,11 +4,17 @@ import { LocalSavePurchases } from '@/data/usecases';
 class CacheStoreSpy implements CacheStore {
   deleteCallsCount = 0;
   insertCallsCount = 0;
-  key: string;
+  deleteKey: string;
+  insertKey: string;
 
   delete(key: string): void {
     this.deleteCallsCount += 1;
-    this.key = key;
+    this.deleteKey = key;
+  }
+
+  insert(key: string): void {
+    this.insertCallsCount += 1;
+    this.insertKey = key;
   }
 }
 
@@ -28,15 +34,19 @@ const makeSut = (): SutTypes => {
 describe('LocalSavePurchases', () => {
   it('should not delete cache on sut.init', () => {
     const { cacheStore } = makeSut();
+
     new LocalSavePurchases(cacheStore);
+
     expect(cacheStore.deleteCallsCount).toBe(0);
   });
 
   it('should delete old cache on sut.save', async () => {
     const { sut, cacheStore } = makeSut();
+
     await sut.save();
+
     expect(cacheStore.deleteCallsCount).toBe(1);
-    expect(cacheStore.key).toBe('purchases');
+    expect(cacheStore.deleteKey).toBe('purchases');
   });
 
   it('should not insert Cache if delete fails', () => {
@@ -44,9 +54,21 @@ describe('LocalSavePurchases', () => {
     jest.spyOn(cacheStore, 'delete').mockImplementationOnce(() => {
       throw new Error();
     });
+
     // não é utilizado o await nesse caso, pois é preciso que o código seja executado para validar
     const promise = sut.save();
+
     expect(cacheStore.insertCallsCount).toBe(0);
     expect(promise).rejects.toThrow();
+  });
+
+  it('should insert Cache if delete succeeds', async () => {
+    const { sut, cacheStore } = makeSut();
+
+    await sut.save();
+
+    expect(cacheStore.deleteCallsCount).toBe(1);
+    expect(cacheStore.insertCallsCount).toBe(1);
+    expect(cacheStore.insertKey).toBe('purchases');
   });
 });
